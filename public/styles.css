@@ -1,0 +1,317 @@
+@font-face {
+  font-family: "0xproto";
+  src: url("fonts/0xProtoNerdFontMono-Regular.ttf") format("truetype");
+}
+
+body {
+  background-color: rgb(24, 18, 43);
+  height: 100vh;
+  margin: 0;
+  color: aliceblue;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  font-family: "0xproto", monospace;
+  z-index: 0;
+}
+
+
+
+
+.sidenav {
+  height: 100%; /* Full-height: remove this if you want "auto" height */
+  width: 160px; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: rgb(57, 48, 83); 
+  overflow-x: hidden; /* Disable horizontal scroll */
+  border-collapse: separate;
+  border-spacing: 0px 35px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  
+}
+
+
+
+.sidenav tr:hover {
+  cursor: pointer;
+  background-color: rgba(125,125,125,0.1);
+}
+
+.main-content {
+  padding-top: 10px;
+  padding-bottom: 100px;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 45px;
+  margin-top: 20px;
+}
+
+.dateAndTime {
+  
+  
+  font-size: 30px;
+  
+  padding: 35px;
+  background-color: rgba(57, 48, 83, 0.5);
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 375px;
+  height: 150px;
+
+  border: 1px solid black;
+}
+.clock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.clockItems{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+.dateAndTime header {
+  text-align: center;
+}
+
+.weather {
+  
+  
+  font-size: 35px;
+  padding: 35px;
+  background-color: rgba(57, 48, 83, 0.5);
+  position: absolute;
+  right: 0;
+  top: 221px;
+  width: 300px;
+  border: 1px solid black;
+  border-top: none;
+  
+  
+}
+
+.weather header {
+  text-align: center;
+}
+.weatherInfo {
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.serverServices{
+  
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  flex-wrap: wrap;
+}
+
+.localServices{
+  
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  flex-wrap: wrap;
+}
+
+.passGenInnerContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 25px;
+}
+
+.passGen{
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  flex-wrap: wrap;
+}
+
+.passGen table tr td{
+  padding: 10px;
+  text-align: center;
+}
+
+.passGenButton{
+  width: 200px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+  
+  background-color: rgba(200, 200, 200, 0.1);
+  border: 1px solid black;
+  border-radius: 15px;
+
+  transition: all 0.3s;
+  transition: scale 0.2s;
+}
+
+.passGenButtonUnpressed:hover{
+  background-color: rgba(200, 200, 200, 0.2);
+  scale: 0.95;
+  
+}
+
+.passGenButtonPressed{
+  scale: 1.05;
+}
+
+.passGenOutput{
+  width: 260px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  cursor:copy;
+  
+  background-color: rgba(150, 150, 150, 0.1);
+  border: 1px solid black;
+  border-radius: 7px;
+
+  transition: all 0.3s;
+  transition: scale 0.2s;
+}
+
+
+
+
+
+
+.section{
+  margin-top: 10vh;
+  z-index: -1;
+  
+}
+.service{
+  margin:40px;
+  width:100px;
+  height:100px;
+  padding: 10px;
+  background-color: rgb(55, 55, 55);
+  position: relative;
+  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.80);
+  text-align: center;
+  font-size: 25px;
+  
+}
+
+.sectionHeader{
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 80px;
+  bottom: 0px;
+}
+
+.checkboxTd{
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+  
+}
+.checkboxTd span {
+  width: 20px;
+  height: 20px;
+  background-color: rgba(125, 125, 125, 0.05);
+  border: 2px solid rgba(0, 0, 0, 0.9);
+  display: inline-block;
+  cursor: pointer;
+  transition: background-color 0.4s ease;
+}
+
+.checkboxTd span:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.checkboxTd span.checked {
+  background-color: rgba(30, 60, 200, 0.9);
+  
+  background-position: center;
+  
+  transition: background-color 0.6s ease;
+}
+
+
+.popupContainer{
+  
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shutdownMenuButton{
+  height:3.5vw;
+  width: 3.5vw;
+  padding: 2px;
+  background-color: rgb(57, 48, 83); 
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  overflow-y: hidden;
+  cursor: pointer;
+  
+}
+.shutdownMenuButton img{
+  height:inherit;
+  width: inherit;
+
+}
+
+.shutdownMenu{
+  
+  align-self: center;
+  width: 20vw;
+  height: 60vh;
+  z-index: 100;
+  top: 100px;
+  position: absolute;
+  background-color: rgba(50, 50, 50, 0.7);
+  display: none;
+}
+
+.shutdownMenuItem{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width:40%;
+  margin:auto;
+  margin-top: 100px;
+  
+  font-size: 20px;
+  background-color: rgba(125,125,125,0.2);
+  border: 1px solid rgb(10, 10, 10);
+  border-radius: 10px;
+  cursor: pointer;
+  
+}
+
+.shutdownMenuItem p{
+  padding-left: 20px;
+}
