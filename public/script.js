@@ -8,7 +8,7 @@ let specialChars = "!@#$%^&*()_+-={}[];':?><,./|`~";
 function updateWelcomeMessage() {
   let welcomeMsg = document.getElementById("welcomeHeader");
   let hrs = new Date().getHours();
-  
+
   switch (true) {
     case hrs < 6:
       welcomeMsg.innerText = "Good Evening";
@@ -23,6 +23,35 @@ function updateWelcomeMessage() {
       welcomeMsg.innerText = "Good Evening";
       break;
   }
+}
+
+function getServerSysData(dataReq) {
+  /* fetch("/getSysData", {
+    method: "POST",
+    body: JSON.stringify({
+      dataRequested: dataReq
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
+  })*/
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "/getSysData");
+  xhr.setRequestHeader("Content-Type", "application/json");
+  const body = JSON.stringify({
+    userId: 1,
+    title: "Demo Todo Data using XMLHttpRequest",
+    completed: false,
+  });
+  xhr.onreadystatechange = function()  {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      return JSON.parse(xhr.responseText).data;
+    } else if (false) {
+      console.log(`Error: ${xhr.status}`);
+    }
+  };
+  xhr.send(body);
 }
 
 function updateTimeAndDate() {
@@ -64,7 +93,7 @@ function navOpen(section) {
 }
 function togglePassGenButtonState() {
   console.log("togglePassGenButtonState");
-  button = document.getElementById("passGenButton");
+  let button = document.getElementById("passGenButton");
 
   if (button.classList.contains("passGenButtonUnpressed")) {
     button.classList.add("passGenButtonPressed");
@@ -107,13 +136,13 @@ function passwordGenerationRequested() {
 }
 
 function generatePassword(PassLength, numbers, lower, upper, special) {
-  use = "";
-  if (!numbers &&!lower &&!upper &&!special){
+  let use = "";
+  if (!numbers && !lower && !upper && !special) {
     numbers = true;
     lower = true;
     upper = true;
     special = true;
-  } 
+  }
   if (numbers) {
     use += numbersList;
   }
@@ -128,7 +157,7 @@ function generatePassword(PassLength, numbers, lower, upper, special) {
   }
 
   use = use.split("");
-  
+
   let password = "";
 
   for (let i = 0; i < PassLength; i++) {
@@ -137,9 +166,9 @@ function generatePassword(PassLength, numbers, lower, upper, special) {
   }
   return password;
 }
-function shutdownMenuToggle(){
+function shutdownMenuToggle() {
   let menu = document.getElementById("shutdownMenu");
-  if (menu.style.display == "block"){
+  if (menu.style.display == "block") {
     menu.style.display = "none";
   } else {
     menu.style.display = "block";
@@ -158,9 +187,6 @@ for (let i = 0; i < 10; i++) {
 document.getElementById("passGenLengthSlider").value = 50;
 document.getElementById("includeLowerCase").classList.add("checked");
 document.getElementById("includeNumbers").classList.add("checked");
-
-
-
 
 document.querySelectorAll(".checkboxTd span").forEach(function (span) {
   span.addEventListener("click", function () {
