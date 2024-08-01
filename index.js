@@ -3,7 +3,8 @@ const fs = require("fs");
 
 const {EventEmitter} = require("events");
 const htmlPath = path.resolve(__dirname, "index.html");
-const execSync = require('child_process').execSync;
+const util = require('util')
+const exec = util.promisify(require('child_process').exec)
 const express = require("express");
 const app = express();
 const eventEmitter = new EventEmitter;
@@ -23,7 +24,18 @@ fs.readFile('./index.html', 'utf8', (err, html) => {
 });
 
 function runCmd(cmd){
-  return execSync(cmd)
+  return new Promise((resolve, reject) => {
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        reject();
+      }
+      runCmdOut = stdout;
+      if(stderr) console.error(`stderr: ${stderr}`);
+      
+      resolve()
+    });
+  })
 }
 
 app.use(express.static("public"));
@@ -36,19 +48,30 @@ app.get("/", (req, res) => {
 
 
 
-app.post("/:id", (req, res) => {
-  const {id}=req.params
-  const b=req.body
-  if(id=='getSysData'){
-    
-    let out = execSync("uptime -p", { encoding: 'utf-8' })
-    
-    res.send({"data":out})
-  }else{
-    console.log(b)
-    res.send(b)
+app.post("/getSysData/:cmdReq", (req, res) => {
+  const {cmdReq}=req.params
+  //const b=req.body
+  let cmd=''
+  switch (cmdReq) {
+    case "uptime":
+      cmd="uptime -p"
+      break;
+  
+    default:
+      console.log("x")
+      res.send({"out":"No Valid command"})
+      break;
   }
-
+  
+  if(cmd){
+    
+    runCmd(cmd).then(()=>{
+      console.log(runCmdOut)
+      res.send({"out":runCmdOut})})
+  }
+  
+  
 });
+
 
 app.listen(5000, () => console.log("Server running at http://localhost:5000/"));

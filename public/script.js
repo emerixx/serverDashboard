@@ -26,32 +26,14 @@ function updateWelcomeMessage() {
 }
 
 function getServerSysData(dataReq) {
-  /* fetch("/getSysData", {
-    method: "POST",
-    body: JSON.stringify({
-      dataRequested: dataReq
-    }),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8"
-    }
-  })*/
-
-  const xhr = new XMLHttpRequest();
-  xhr.open("POST", "/getSysData");
-  xhr.setRequestHeader("Content-Type", "application/json");
-  const body = JSON.stringify({
-    userId: 1,
-    title: "Demo Todo Data using XMLHttpRequest",
-    completed: false,
+  let o = {};
+  return new Promise((resolve, reject) => {
+    fetch("/getSysData/" + dataReq, { method: "POST" }).then((response) => {
+      resolve(response.json());
+    });
+  }).then((data) => {
+    return data.out;
   });
-  xhr.onreadystatechange = function()  {
-    if (xhr.readyState == 4 && xhr.status == 200) {
-      return JSON.parse(xhr.responseText).data;
-    } else if (false) {
-      console.log(`Error: ${xhr.status}`);
-    }
-  };
-  xhr.send(body);
 }
 
 function updateTimeAndDate() {
