@@ -9,8 +9,12 @@ const express = require("express");
 const app = express();
 const eventEmitter = new EventEmitter;
 
+let uptime = '';
 let rootHtml="";
 let runCmdOut = "";
+
+let updateUptimeInterval = 5 * 60 * 1000 //5 minutes
+let updateUptimeIntervalId=''
 
 fs.readFile('./index.html', 'utf8', (err, html) => {
   if(err){
@@ -38,6 +42,15 @@ function runCmd(cmd){
   })
 }
 
+function updateUpTime(){
+  runCmd("uptime -p").then(()=>{
+    uptime=runCmdOut
+    console.log("updated up time, current up time: " + uptime)
+  })
+}
+
+
+
 app.use(express.static("public"));
 app.use(express.json())
 
@@ -50,7 +63,6 @@ app.get("/", (req, res) => {
 
 app.post("/getSysData/:cmdReq", (req, res) => {
   const {cmdReq}=req.params
-  //const b=req.body
   let cmd=''
   switch (cmdReq) {
     case "uptime":
@@ -69,6 +81,38 @@ app.post("/getSysData/:cmdReq", (req, res) => {
       console.log(runCmdOut)
       res.send({"out":runCmdOut})})
   }
+  
+  
+});
+
+app.post("/config/:cmdReq", (req, res) => {
+  const {cmdReq}=req.params
+  
+  let cmd=''
+  switch (cmdReq) {
+    case "toggleUpdateUptime":
+      if(updateUptimeIntervalId==''){
+        updateUptimeIntervalId = setInterval(function() {
+          updateUpTime();
+          
+        }, updateUptimeInterval);
+        console.log("enabled getUpTime interval, current interval: " + updateUptimeInterval/1000 + " seconds\n")
+        res.send({"out":"enabled getUpTime interval, current interval: " + updateUptimeInterval/1000 + " seconds"})
+      }else{
+        clearInterval(updateUptimeIntervalId);
+        console.log("interupted getUpTime interval\n")
+        res.send({"out":"interupted getUpTime interval"})
+        updateUptimeIntervalId=''
+      }
+      break;
+  
+    default:
+      console.log("x")
+      res.send({"out":"No Valid command"})
+      break;
+  }
+  
+ 
   
   
 });

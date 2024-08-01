@@ -26,14 +26,16 @@ function updateWelcomeMessage() {
 }
 
 function getServerSysData(dataReq) {
-  let o = {};
-  return new Promise((resolve, reject) => {
+  let o = '';
+  new Promise((resolve, reject) => {
     fetch("/getSysData/" + dataReq, { method: "POST" }).then((response) => {
       resolve(response.json());
     });
   }).then((data) => {
     return data.out;
+    
   });
+  
 }
 
 function updateTimeAndDate() {
