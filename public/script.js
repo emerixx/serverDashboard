@@ -5,6 +5,10 @@ let lowerCase = "abcdefghijklmnopqrstuvwxyz";
 let upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 let specialChars = "!@#$%^&*()_+-={}[];':?><,./|`~";
 
+let gssdOut = "";
+let uptime = "";
+let updateUptimeInterval = 10 * 1000; // 5 min
+
 function updateWelcomeMessage() {
   let welcomeMsg = document.getElementById("welcomeHeader");
   let hrs = new Date().getHours();
@@ -26,16 +30,22 @@ function updateWelcomeMessage() {
 }
 
 function getServerSysData(dataReq) {
-  let o = '';
   new Promise((resolve, reject) => {
     fetch("/getSysData/" + dataReq, { method: "POST" }).then((response) => {
       resolve(response.json());
     });
   }).then((data) => {
-    return data.out;
-    
+    console.log(data.out);
+    gssdOut = data.out;
   });
-  
+}
+
+function updateUptime() {
+  //get data from server
+  getServerSysData("uptime");
+  uptime = gssdOut;
+  //write to html
+  document.getElementById("sso_uptime").innerHTML = uptime;
 }
 
 function updateTimeAndDate() {
@@ -162,6 +172,7 @@ function shutdownMenuToggle() {
 updateWelcomeMessage();
 updateTimeAndDate();
 setInterval(updateTimeAndDate, 1000);
+setInterval(updateUptime, updateUptimeInterval);
 
 navOpen("home");
 for (let i = 0; i < 10; i++) {
