@@ -115,7 +115,16 @@ body {
   
 }
 
-.serverServices{
+.serverServicesLinks{
+  
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  flex-wrap: wrap;
+}
+.serverServicesOverview{
   
   padding: 5px;
   display: flex;
@@ -229,6 +238,14 @@ body {
   bottom: 0px;
 }
 
+.sectionSubheader{
+  text-align: center;
+  font-size: 25px;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  bottom: 0px;
+}
+
 .checkboxTd{
   align-items: center;
   text-align: center;
@@ -314,4 +331,24 @@ body {
 
 .shutdownMenuItem p{
   padding-left: 20px;
+
 }
+
+.ssoItemValue{
+  padding-right: 40px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width:180px;
+  text-align: center;
+}
+.ssoItemHeader{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width:180px;
+  text-align: center;
+}
+
+.serverServicesOverview table tr {
+  border: 1px solid black;
+}
+
