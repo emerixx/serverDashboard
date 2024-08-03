@@ -7,8 +7,11 @@ let specialChars = "!@#$%^&*()_+-={}[];':?><,./|`~";
 
 let gssdOut = "";
 let uptime = "";
+let freeRam = "";
+let totalRam = "";
+let usedRam = "";
 let updateUptimeInterval = 10 * 1000; // 5 min
-
+let updateRamUsageInterval=10*1000
 function updateWelcomeMessage() {
   let welcomeMsg = document.getElementById("welcomeHeader");
   let hrs = new Date().getHours();
@@ -29,24 +32,45 @@ function updateWelcomeMessage() {
   }
 }
 
-function getServerSysData(dataReq) {
+function getServerSysData(dataReq, func) {
   new Promise((resolve, reject) => {
     fetch("/getSysData/" + dataReq, { method: "POST" }).then((response) => {
       resolve(response.json());
     });
   }).then((data) => {
-    console.log(data.out);
-    gssdOut = data.out;
+    
+
+    func(data)
   });
 }
-
-function updateUptime() {
-  //get data from server
-  getServerSysData("uptime");
-  uptime = gssdOut;
+function updateRamUsage(data){
+  freeRam=data.send.out
+  totalRam=data.send.out1
+  usedRam=data.send.out2
+  document.getElementById("sso_freemem").innerHTML=freeRam
+  document.getElementById("sso_totmem").innerHTML=totalRam
+  document.getElementById("sso_usemem").innerHTML=usedRam
+}
+function updateUptime(data){
+  
+  uptime = data.out;
+  
   //write to html
   document.getElementById("sso_uptime").innerHTML = uptime;
 }
+function updateUptimeReq() {
+  //get data from server
+  getServerSysData("uptime", updateUptime);
+  /*
+  */
+}
+function updateRamUsageReq() {
+  //get data from server
+  getServerSysData("RAM", updateRamUsage);
+  
+  
+}
+
 
 function updateTimeAndDate() {
   let currentDate = new Date();
@@ -72,11 +96,6 @@ function updateTimeAndDate() {
   document.getElementById("date").innerText = dateString;
 }
 
-function printMountStuff() {
-  let toAlrt =
-    "sudo mount -t cifs //192.168.1.216/configShare /mnt/serverShare -o credentials=/etc/samba/share";
-  alert(toAlrt);
-}
 
 function navOpen(section) {
   let sections = document.getElementsByClassName("section");
@@ -171,9 +190,11 @@ function shutdownMenuToggle() {
 
 updateWelcomeMessage();
 updateTimeAndDate();
+updateUptimeReq();
+updateRamUsageReq();
 setInterval(updateTimeAndDate, 1000);
-setInterval(updateUptime, updateUptimeInterval);
-
+setInterval(updateUptimeReq, updateUptimeInterval);
+setInterval(updateRamUsageReq, updateRamUsageInterval);
 navOpen("home");
 for (let i = 0; i < 10; i++) {
   numbersList += String(i);

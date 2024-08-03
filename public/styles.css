@@ -340,11 +340,13 @@ body {
   padding-bottom: 10px;
   width:180px;
   text-align: center;
+  font-size: 15px;
 }
 .ssoItemHeader{
   padding-top: 10px;
   padding-bottom: 10px;
   width:180px;
+  font-size: 20px;
   text-align: center;
 }
 

@@ -11,7 +11,7 @@ const { combine, timestamp, json, colorize, align, printf } = winston.format;
 const app = express();
 const logInConsole = true;
 const eventEmitter = new EventEmitter();
-const PORT=8080
+const PORT = 80;
 
 let uptime = "";
 let rootHtml = "";
@@ -141,20 +141,20 @@ const slog = {
 };
 const clog = {
   info(msg) {
-    consoleLogger.info(msg);
+    consoleLogger.info(msg + " (clog)");
   },
   warn(msg) {
-    consoleLogger.warn(msg);
+    consoleLogger.warn(msg + " (clog)");
   },
   error(msg) {
-    consoleLogger.error(msg);
+    consoleLogger.error(msg + " (clog)");
   },
 };
 
 fs.readFile("./index.html", "utf8", (err, html) => {
   if (err) {
     slog.error(
-      "Error occured while reading the root html file, exiting...\n" + err
+      "Error occured while reading the root html file, exiting..." + err
     );
     process.exit();
   } else {
@@ -169,10 +169,12 @@ function runCmd(cmd) {
         slog.error(`exec error while running command "${cmd}" : ${error}`);
         reject();
       }
-      slog.info(stdout);
-      runCmdOut = stdout;
-
-      if (stderr) slog.error(`stderr while running command "${cmd}": ${stderr}`);
+      if (stderr) {
+        slog.error(`stderr while running command "${cmd}": ${stderr}`);
+        reject();
+      }
+      runCmdOut = stdout.slice(3, stdout.length-1);
+      clog.info(runCmdOut);
 
       resolve();
     });
@@ -186,9 +188,9 @@ function updateUpTime() {
   });
 }
 function updateRamUsage() {
-  freeRam = os.freemem() / Math.pow(10, 9); //convert to GB
-  totalRam = os.totalmem() / Math.pow(10, 9); // convert to GB
-  usedRam = totalRam - freeRam;
+  freeRam = +((os.freemem() / Math.pow(10, 9)).toFixed(3)); //convert to GB
+  totalRam = +((os.totalmem() / Math.pow(10, 9)).toFixed(3)); // convert to GB
+  usedRam = +((totalRam - freeRam).toFixed(3));
   slog.info(
     "updated ram usage, current free RAM: " +
       freeRam +
@@ -196,7 +198,7 @@ function updateRamUsage() {
       totalRam +
       "GB, current used RAM: " +
       usedRam +
-      "GB\n"
+      "GB"
   );
 }
 function updateTemp() {}
@@ -216,9 +218,19 @@ app.post("/getSysData/:cmdReq", (req, res) => {
       res.send({ out: uptime });
       slog.info("sending uptime to client, uptime: " + uptime);
       break;
-
+    case "RAM":
+      let send= {
+        out:freeRam+"GB",
+        out1:totalRam+"GB",
+        out2:usedRam+"GB"
+      }//`${freeRam}GB;${totalRam}GB;${usedRam}GB`
+      res.send({ send });
+      slog.info(`sending RAM usage data to client, sending: FM=${send.out}, TM=${send.out1}, UM=${send.out2}, ` );
+      break;
     default:
-      slog.warn("getSysData post request failed, invalid command, command: " + cmdReq);
+      slog.warn(
+        "getSysData post request failed, invalid command, command: " + cmdReq
+      );
       res.send({ out: "No Valid command" });
       break;
   }
@@ -277,14 +289,21 @@ app.post("/config/:cmdReq", (req, res) => {
       break;
 
     default:
-      slog.error("config post request failed, invalid command, command: " + cmdReq);
+      slog.error(
+        "config post request failed, invalid command, command: " + cmdReq
+      );
       res.send({ out: "No Valid command" });
       break;
   }
 });
 
-
+updateUptimeIntervalId = setInterval(function () {
+  updateUpTime();
+}, updateUptimeInterval);
+updateRamUsageIntervalId = setInterval(function () {
+  updateRamUsage();
+}, updateRamUsageInterval);
 updateRamUsage();
 updateUpTime();
 
-app.listen(8080, () => slog.info("Started Server at localhost/"+PORT));
+app.listen(PORT, () => slog.info("Started Server at localhost/" + PORT));
