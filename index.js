@@ -21,9 +21,12 @@ let updateUptimeInterval = 5 * 60 * 1000; //5 minutes
 let updateUptimeIntervalId = "";
 let updateRamUsageInterval = 5 * 60 * 1000; //5 minutes
 let updateRamUsageIntervalId = "";
+let updateTemperatureInterval = 5 * 60 * 1000; //5 minutes
+let updateTemperatureIntervalId = "";
 let freeRam = 0;
 let totalRam = 0;
 let usedRam = 0;
+let temperature=0;
 
 const mainLoggerFile = new winston.transports.File({
   filename: "./logs/main.log",
@@ -174,7 +177,6 @@ function runCmd(cmd) {
         reject();
       }
       runCmdOut = stdout.slice(3, stdout.length-1);
-      clog.info(runCmdOut);
 
       resolve();
     });
@@ -201,7 +203,20 @@ function updateRamUsage() {
       "GB"
   );
 }
-function updateTemp() {}
+function updateTemperature() {
+
+  fs.readFile("/sys/class/thermal/thermal_zone0/temp", "utf8", (err, temp) => {
+    if (err) {
+      slog.error(
+        "Error occured while reading the temperature file, setting temperature to -1..." + err
+      );
+      temperature=-1
+    } else {
+      temperature=temp/1000;
+      slog.info(`updated temperature, current temperature: ${temperature}°C`)
+    }
+  });
+} 
 
 app.use(express.static("public"));
 app.use(express.json());
@@ -223,9 +238,13 @@ app.post("/getSysData/:cmdReq", (req, res) => {
         out:freeRam+"GB",
         out1:totalRam+"GB",
         out2:usedRam+"GB"
-      }//`${freeRam}GB;${totalRam}GB;${usedRam}GB`
+      }
       res.send({ send });
       slog.info(`sending RAM usage data to client, sending: FM=${send.out}, TM=${send.out1}, UM=${send.out2}, ` );
+      break;
+    case "temperature":
+      res.send({ out: temperature });
+      slog.info("sending temperature to client, temperature: " + temperature);
       break;
     default:
       slog.warn(
@@ -287,6 +306,30 @@ app.post("/config/:cmdReq", (req, res) => {
         updateRamUsageIntervalId = "";
       }
       break;
+    case "toggleUpdateTemperature":
+      if (updateTemperatureIntervalId == "") {
+        updateTemperatureIntervalId = setInterval(function () {
+          updateTemperature();
+        }, updateTemperatureInterval);
+        slog.info(
+          "enabled getTemperature interval, current interval: " +
+            updateTemperatureInterval / 1000 +
+            " seconds"
+        );
+        res.send({
+          out:
+            "enabled getTemperature interval, current interval: " +
+            updateTemperatureInterval / 1000 +
+            " seconds",
+        });
+      } else {
+        clearInterval(updateTemperatureIntervalId);
+        slog.info("stopped getTemp interval");
+        res.send({ out: "interupted getTemp interval" });
+        updateTemperatureIntervalId = "";
+      }
+      break;
+
 
     default:
       slog.error(
@@ -303,7 +346,12 @@ updateUptimeIntervalId = setInterval(function () {
 updateRamUsageIntervalId = setInterval(function () {
   updateRamUsage();
 }, updateRamUsageInterval);
+updateTemperatureIntervalId = setInterval(function () {
+  updateTemperature();
+}, updateTemperatureInterval);
 updateRamUsage();
 updateUpTime();
+updateTemperature();
+
 
 app.listen(PORT, () => slog.info("Started Server at localhost/" + PORT));
