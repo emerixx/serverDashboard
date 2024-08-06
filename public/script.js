@@ -12,6 +12,9 @@ let totalRam = "";
 let usedRam = "";
 let updateUptimeInterval = 10 * 1000; // 5 min
 let updateRamUsageInterval=10*1000
+let updateTempInterval=10*1000
+let temperature = 0
+
 function updateWelcomeMessage() {
   let welcomeMsg = document.getElementById("welcomeHeader");
   let hrs = new Date().getHours();
@@ -58,6 +61,13 @@ function updateUptime(data){
   //write to html
   document.getElementById("sso_uptime").innerHTML = uptime;
 }
+function updateTemp(data){
+  
+  temperature = data.out;
+  
+  //write to html
+  document.getElementById("sso_temperature").innerHTML = temperature;
+}
 function updateUptimeReq() {
   //get data from server
   getServerSysData("uptime", updateUptime);
@@ -70,7 +80,12 @@ function updateRamUsageReq() {
   
   
 }
-
+function updateTempReq() {
+  //get data from server
+  getServerSysData("temperature", updateTemp);
+  
+  
+}
 
 function updateTimeAndDate() {
   let currentDate = new Date();
@@ -192,9 +207,11 @@ updateWelcomeMessage();
 updateTimeAndDate();
 updateUptimeReq();
 updateRamUsageReq();
+updateTempReq();
 setInterval(updateTimeAndDate, 1000);
 setInterval(updateUptimeReq, updateUptimeInterval);
 setInterval(updateRamUsageReq, updateRamUsageInterval);
+setInterval(updateTempReq, updateTempInterval);
 navOpen("home");
 for (let i = 0; i < 10; i++) {
   numbersList += String(i);
