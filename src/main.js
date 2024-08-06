@@ -12,6 +12,7 @@ const app = express();
 const logInConsole = true;
 const eventEmitter = new EventEmitter();
 const PORT = process.env.PORT || 80;
+const logDir="/home/emerix/coding_projects/webDev/serverDashBoard/logs/"
 
 let uptime = "";
 let rootHtml = "";
@@ -29,41 +30,41 @@ let usedRam = 0;
 let temperature=0;
 
 const mainLoggerFile = new winston.transports.File({
-  filename: "./logs/main.log",
+  filename: logDir+"main.log",
   datePattern: "DD-MM-YYYY",
 });
 const infoLoggerFile = new winston.transports.File({
-  filename: "./logs/info.log",
+  filename: logDir+"info.log",
   datePattern: "DD-MM-YYYY",
   level: "info",
 });
 const warnLoggerFile = new winston.transports.File({
-  filename: "./logs/warn.log",
+  filename: logDir+"warn.log",
   datePattern: "DD-MM-YYYY",
   level: "warn",
 });
 const errorLoggerFile = new winston.transports.File({
-  filename: "./logs/error.log",
+  filename: logDir+"error.log",
   datePattern: "DD-MM-YYYY",
   level: "error",
 });
 
 const mainLoggerFilePlain = new winston.transports.File({
-  filename: "./logs/plain/main.log",
+  filename: logDir+"plain/main.log",
   datePattern: "DD-MM-YYYY",
 });
 const infoLoggerFilePlain = new winston.transports.File({
-  filename: "./logs/plain/info.log",
+  filename: logDir+"plain/info.log",
   datePattern: "DD-MM-YYYY",
   level: "info",
 });
 const warnLoggerFilePlain = new winston.transports.File({
-  filename: "./logs/plain/warn.log",
+  filename: logDir+"plain/warn.log",
   datePattern: "DD-MM-YYYY",
   level: "warn",
 });
 const errorLoggerFilePlain = new winston.transports.File({
-  filename: "./logs/plain/error.log",
+  filename: logDir+"plain/error.log",
   datePattern: "DD-MM-YYYY",
   level: "error",
 });
