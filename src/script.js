@@ -10,9 +10,11 @@ let uptime = "";
 let freeRam = "";
 let totalRam = "";
 let usedRam = "";
-let updateUptimeInterval = 10 * 1000; // 5 min
-let updateRamUsageInterval=10*1000
-let updateTempInterval=10*1000
+let loadavg = "";
+let updateUptimeInterval = 30*1000; 
+let updateRamUsageInterval=30*1000
+let updateTempInterval=30*1000
+let updateLoadavgInterval=30*1000
 let temperature = 0
 
 function updateWelcomeMessage() {
@@ -68,6 +70,13 @@ function updateTemp(data){
   //write to html
   document.getElementById("sso_temperature").innerHTML = temperature + "°C";
 }
+function updateLoadavg(data){
+  
+  loadavg = data.out;
+  
+  //write to html
+  document.getElementById("sso_loadavg").innerHTML = loadavg;
+}
 function updateUptimeReq() {
   //get data from server
   getServerSysData("uptime", updateUptime);
@@ -85,6 +94,9 @@ function updateTempReq() {
   getServerSysData("temperature", updateTemp);
   
   
+}
+function updateLoadavgReq() {
+  getServerSysData("loadavg", updateLoadavg)
 }
 
 function updateTimeAndDate() {
@@ -208,10 +220,12 @@ updateTimeAndDate();
 updateUptimeReq();
 updateRamUsageReq();
 updateTempReq();
+updateLoadavgReq();
 setInterval(updateTimeAndDate, 1000);
 setInterval(updateUptimeReq, updateUptimeInterval);
 setInterval(updateRamUsageReq, updateRamUsageInterval);
 setInterval(updateTempReq, updateTempInterval);
+setInterval(updateLoadavgReq, updateLoadavgInterval);
 navOpen("home");
 for (let i = 0; i < 10; i++) {
   numbersList += String(i);

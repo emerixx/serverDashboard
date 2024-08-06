@@ -18,16 +18,19 @@ let uptime = "";
 let rootHtml = "";
 let runCmdOut = "";
 
-let updateUptimeInterval = 5 * 60 * 1000; //5 minutes
+let updateUptimeInterval = 60 * 1000; 
 let updateUptimeIntervalId = "";
-let updateRamUsageInterval = 5 * 60 * 1000; //5 minutes
+let updateRamUsageInterval = 60 * 1000; 
 let updateRamUsageIntervalId = "";
-let updateTemperatureInterval = 5 * 60 * 1000; //5 minutes
+let updateTemperatureInterval = 60 * 1000; 
 let updateTemperatureIntervalId = "";
+let updateLoadavgInterval = 60 * 1000; 
+let updateLoadavgIntervalId = "";
 let freeRam = 0;
 let totalRam = 0;
 let usedRam = 0;
 let temperature=0;
+let loadavg=0;
 
 const mainLoggerFile = new winston.transports.File({
   filename: logDir+"main.log",
@@ -192,6 +195,11 @@ function updateUpTime() {
     slog.info("updated up time, current up time: " + uptime);
   });
 }
+function updateLoadavg() {
+  loadavg = os.loadavg();
+
+  slog.info("updated loadavg, current loadavg: " + loadavg);
+}
 function updateRamUsage() {
   freeRam = +((os.freemem() / Math.pow(10, 9)).toFixed(3)); //convert to GB
   totalRam = +((os.totalmem() / Math.pow(10, 9)).toFixed(3)); // convert to GB
@@ -248,6 +256,11 @@ app.post("/getSysData/:cmdReq", (req, res) => {
       res.send({ out: temperature });
       slog.info("sending temperature to client, temperature: " + temperature + "°C");
       break;
+    case "loadavg":
+      res.send({ out: loadavg });
+      slog.info("sending loadavg to client, loadavg: " + loadavg);
+      break;
+
     default:
       slog.warn(
         "getSysData post request failed, invalid command, command: " + cmdReq
@@ -351,9 +364,13 @@ updateRamUsageIntervalId = setInterval(function () {
 updateTemperatureIntervalId = setInterval(function () {
   updateTemperature();
 }, updateTemperatureInterval);
+updateLoadavgIntervalId = setInterval(function () {
+  updateLoadavg();
+}, updateLoadavgInterval);
 updateRamUsage();
 updateUpTime();
 updateTemperature();
+updateLoadavg();
 
 
 app.listen(PORT, () => slog.info("Started Server at localhost/" + PORT));

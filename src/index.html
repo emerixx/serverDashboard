@@ -77,7 +77,7 @@
             </div>
           </div>
         </div>
-        <div class="weather">
+        <div style="display:none"class="weather">
           <header>Local weather</header>
           <br>
           <div class="weatherInfo">
@@ -115,7 +115,7 @@
             <tr>
               <td>
                 <div class="pihole service" id="piholeItem">
-                  <a href="http://192.168.1.216/admin">
+                  <a href="http://192.168.1.216:8080/admin">
                     <img
                       src="imgs/serverSideServicesIcons/pihole.svg"
                       alt="pihole"
@@ -164,7 +164,7 @@
               </td>
               <td>
                 <div class="ssoItemValue" id="sso_uptime">
-                   
+                   -1
                 </div>
               </td>
               
@@ -177,17 +177,17 @@
               </td>
               <td>
                 <div class="ssoItemValue" id="sso_temperature">
-                  52°C 
+                  -1°C 
                 </div>
               </td>
               <td>
-                <div class="ssoItemHeader" id="sso_unused_header">
-                  x
+                <div class="ssoItemHeader" id="sso_loadavg_header">
+                  Load average:
                 </div>
               </td>
               <td>
-                <div class="ssoItemValue" id="sso_unused">
-                  x
+                <div class="ssoItemValue" id="sso_loadavg">
+                  -1, -1, -1
                 </div>
               </td>
               
@@ -200,7 +200,7 @@
               </td>
               <td>
                 <div class="ssoItemValue" id="sso_freemem">
-                  
+                  -1
                 </div>
               </td>
               
@@ -213,7 +213,7 @@
               </td>
               <td>
                 <div class="ssoItemValue" id="sso_totmem">
-                  
+                  -1
                 </div>
               </td>
               <td>
@@ -223,7 +223,7 @@
               </td>
               <td>
                 <div class="ssoItemValue" id="sso_usemem">
-                  
+                  -1
                 </div>
               </td>
               
