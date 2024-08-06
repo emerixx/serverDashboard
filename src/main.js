@@ -11,7 +11,7 @@ const { combine, timestamp, json, colorize, align, printf } = winston.format;
 const app = express();
 const logInConsole = true;
 const eventEmitter = new EventEmitter();
-const PORT = 80;
+const PORT = process.env.PORT || 80;
 
 let uptime = "";
 let rootHtml = "";
@@ -154,7 +154,9 @@ const clog = {
   },
 };
 
-fs.readFile("./index.html", "utf8", (err, html) => {
+
+
+fs.readFile("./src/index.html", "utf8", (err, html) => {
   if (err) {
     slog.error(
       "Error occured while reading the root html file, exiting..." + err
@@ -176,8 +178,7 @@ function runCmd(cmd) {
         slog.error(`stderr while running command "${cmd}": ${stderr}`);
         reject();
       }
-      runCmdOut = stdout.slice(3, stdout.length-1);
-
+      runCmdOut = stdout
       resolve();
     });
   });
@@ -185,7 +186,8 @@ function runCmd(cmd) {
 
 function updateUpTime() {
   runCmd("uptime -p").then(() => {
-    uptime = runCmdOut;
+    uptime = runCmdOut.slice(3, runCmdOut.length-1);
+;
     slog.info("updated up time, current up time: " + uptime);
   });
 }
@@ -217,8 +219,7 @@ function updateTemperature() {
     }
   });
 } 
-
-app.use(express.static("public"));
+app.use(express.static("./src"));
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -244,7 +245,7 @@ app.post("/getSysData/:cmdReq", (req, res) => {
       break;
     case "temperature":
       res.send({ out: temperature });
-      slog.info("sending temperature to client, temperature: " + temperature);
+      slog.info("sending temperature to client, temperature: " + temperature + "°C");
       break;
     default:
       slog.warn(

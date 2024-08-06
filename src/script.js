@@ -66,7 +66,7 @@ function updateTemp(data){
   temperature = data.out;
   
   //write to html
-  document.getElementById("sso_temperature").innerHTML = temperature;
+  document.getElementById("sso_temperature").innerHTML = temperature + "°C";
 }
 function updateUptimeReq() {
   //get data from server

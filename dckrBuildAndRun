@@ -1,0 +1,2 @@
+sudo docker build -t emerixx/server_dashboard .
+sudo docker run -p 80:80 emerixx/server_dashboard
