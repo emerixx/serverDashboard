@@ -338,9 +338,11 @@ body {
   padding-right: 40px;
   padding-top: 10px;
   padding-bottom: 10px;
-  width:180px;
+  width:250px;
+  height:50px;
+  line-height:50px;
   text-align: center;
-  font-size: 15px;
+  font-size: auto;
 }
 .ssoItemHeader{
   padding-top: 10px;
